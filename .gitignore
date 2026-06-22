@@ -1,0 +1,97 @@
+# Root Git Ignore Configurations
+
+# Dependencies
+node_modules/
+**/node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js Build Output
+.next/
+**/.next/
+out/
+**/out/
+
+# Expo Build Output & Cache
+.expo/
+**/.expo/
+web-build/
+**/web-build/
+
+# Vite & General Builds
+dist/
+**/dist/
+dist-ssr/
+**/dist-ssr/
+build/
+**/build/
+
+# Environment configurations and secrets
+.env*
+**/.env*
+*.pem
+client_secret_*.json
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Database & SQLite files
+*.db
+*.sqlite
+
+# Testing and Coverage
+coverage/
+**/coverage/
+
+# Vercel
+.vercel
+**/.vercel
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
+
+# Prisma Generated Clients
+/backend/src/generated/prisma
+
+# Native platform folders (React Native/Expo)
+ios/
+android/
+**/ios/
+**/android/
+.kotlin/
+*.orig.*
+
+# Metro health check
+.metro-health-check*
+
+# Logs and Debug files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS and Editor configs
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Scratch & deployment scripts (ignored but kept in workspace)
+backend/scratch_*.py
+backend/scratch_*.js
+**/scratch_*.py
+**/scratch_*.js

@@ -1,0 +1,236 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  mobileNumber  String?   @unique
+  password      String?
+  role          Role      @default(USER)
+  referralCode  String    @unique
+  referredById  String?
+  isBlocked     Boolean   @default(false)
+  deviceId      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bankAccountNumber String?
+  bankIfscCode      String?
+  bankAccountHolder String?
+  upiId             String?
+
+  accounts      Account[]
+  sessions      Session[]
+  wallet        Wallet?
+  tickets       Ticket[]
+  rechargeReqs  RechargeRequest[]
+  transactions  Transaction[]
+
+  referredBy    User?     @relation("ReferralRelation", fields: [referredById], references: [id])
+  referredUsers User[]    @relation("ReferralRelation")
+
+  withdrawals   WithdrawRequest[]
+  notifications Notification[]
+  sundayClaims  SundayBonusClaim[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Wallet {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  balance             Float    @default(0)
+  withdrawableBalance Float    @default(0)
+  updatedAt           DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RechargeRequest {
+  id            String   @id @default(cuid())
+  userId        String
+  amount        Float
+  utrNumber     String   @unique
+  screenshotUrl String?
+  scanner       String   @default("Scanner 1")
+  status        RechargeStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Lottery {
+  id            String   @id @default(cuid())
+  name          String
+  category      String   // e.g., "DEAR", "KERALA"
+  drawTime      DateTime
+  ticketPrice   Float
+  status        LotteryStatus @default(OPEN)
+  winningNumber String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tickets       Ticket[]
+}
+
+model Ticket {
+  id           String   @id @default(cuid())
+  userId       String
+  lotteryId    String
+  number       String
+  amount       Float
+  gameType     String   @default("THREE_DIGIT") // SINGLE_A, SINGLE_B, SINGLE_C, DOUBLE_AB, DOUBLE_BC, DOUBLE_AC, THREE_DIGIT, FOUR_DIGIT
+  status       TicketStatus @default(PENDING)
+  winnings     Float    @default(0)
+  winningsPaid Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lottery     Lottery  @relation(fields: [lotteryId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  amount      Float
+  type        TransactionType
+  description String?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WithdrawRequest {
+  id            String   @id @default(cuid())
+  userId        String
+  amount        Float
+  accountNumber String
+  ifscCode      String
+  accountHolder String
+  upiId         String?
+  status        WithdrawStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SundayBonusClaim {
+  id        String   @id @default(cuid())
+  userId    String
+  weekStart DateTime // start of the week (e.g. Monday date)
+  claimedAt DateTime @default(now())
+  amount    Float    @default(100.0)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart])
+}
+
+model Holiday {
+  id          String   @id @default(cuid())
+  date        DateTime @unique
+  category    String?  // null for all, or "DEAR"/"KERALA"
+  description String
+  createdAt   DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum RechargeStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LotteryStatus {
+  OPEN
+  CLOSED
+  COMPLETED
+}
+
+enum TicketStatus {
+  PENDING
+  WON
+  LOST
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
+
+enum WithdrawStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model SystemConfig {
+  id             String   @id @default("default")
+  supportMobile  String   @default("9962188600")
+  supportEmail   String   @default("tgboyzz007@gmail.com")
+  appVersion     String   @default("1.0.0")
+  appDownloadUrl String   @default("https://178-238-236-200.sslip.io/download")
+  updatedAt      DateTime @updatedAt
+}
+

@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Lakshmi",
+    "slug": "lakshmi",
+    "scheme": "cookiestealer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/lakshmi_logo_icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cookiestealer.lakshmi"
+    },
+    "android": {
+      "package": "com.cookiestealer.lakshmi",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-web-browser"
+    ]
+  }
+}
