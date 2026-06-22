@@ -69,7 +69,7 @@ async function main() {
       supportMobile: "9962188600",
       supportEmail: "tgboyzz007@gmail.com",
       appVersion: "1.0.0",
-      appDownloadUrl: "https://178-238-236-200.sslip.io/download",
+      appDownloadUrl: "https://178-238-236-200.sslip.io/lakshmi.apk",
     },
   });
   console.log("✓ System configuration seeded successfully.");
