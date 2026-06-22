@@ -46,7 +46,7 @@ export default function Refer() {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Join me on KL Dear Lottery! Use my referral code: ${referralCode} during sign-up to play, win, and get commission rewards! Download the app now.`,
+        message: `Join me on KL Dear Lottery! Use my referral code: ${referralCode} during sign-up to play, win, and get commission rewards! Download the app now. Link : https://lakshmi-three.vercel.app`,
       });
     } catch (error) {
       console.error(error);
