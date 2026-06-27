@@ -12,8 +12,7 @@ export async function createHoliday(dateString: string, category: string | null,
       throw new Error("Date and description are required.");
     }
 
-    const date = new Date(dateString);
-    date.setHours(0, 0, 0, 0); // Normalize holiday to beginning of day
+    const date = new Date(`${dateString}T00:00:00.000+05:30`);
 
     const normalizedCategory = category === "ALL" ? null : category;
 

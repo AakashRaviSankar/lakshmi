@@ -4,6 +4,7 @@ import { prisma } from "@/app/utils/db";
 import { declareResult } from "@/app/admin/results/actions";
 import { payUserWinningsForShow, payAllWinningsForShow } from "@/app/admin/payouts/actions";
 import TicketsClient from "./TicketsClient";
+import { formatToISTString, formatToISTDateString } from "@/app/utils/date";
 
 export default async function AdminTicketsPage(props: {
   searchParams: Promise<{
@@ -207,7 +208,7 @@ export default async function AdminTicketsPage(props: {
                           </span>
                         </td>
                         <td className="px-6 py-4 text-slate-300">
-                          {new Date(l.drawTime).toLocaleString()}
+                          {formatToISTString(l.drawTime)}
                         </td>
                         <td className="px-6 py-4 text-slate-300">
                           ₹{l.ticketPrice}
@@ -285,7 +286,7 @@ export default async function AdminTicketsPage(props: {
                     </div>
                     <div className="flex justify-between items-center mt-2.5">
                       <p className="text-[9px] text-slate-500 font-medium">
-                        {new Date(l.drawTime).toLocaleDateString()}
+                        {formatToISTDateString(l.drawTime)}
                       </p>
                       <p className="text-[9px] text-indigo-400/90 font-bold">
                         {l._count.tickets} tickets

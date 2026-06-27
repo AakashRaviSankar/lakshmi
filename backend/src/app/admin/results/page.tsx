@@ -1,5 +1,6 @@
 import { prisma } from "@/app/utils/db";
 import Link from "next/link";
+import { formatToISTString } from "@/app/utils/date";
 import { declareResult, editWinningNumber } from "./actions";
 import { ConfirmButton } from "../ConfirmButton";
 
@@ -111,7 +112,7 @@ export default async function ResultsPage(props: {
                   <div>
                     <h3 className="font-bold text-white text-base">{lottery.name}</h3>
                     <p className="text-xs text-slate-550 font-medium mt-0.5">
-                      Draw: {new Date(lottery.drawTime).toLocaleString()}
+                      Draw: {formatToISTString(lottery.drawTime)}
                     </p>
                   </div>
                   
@@ -160,7 +161,7 @@ export default async function ResultsPage(props: {
                         <div>
                           <h3 className="font-bold text-white text-base">{lottery.name}</h3>
                           <p className="text-xs text-slate-500 font-medium mt-0.5">
-                            Draw: {new Date(lottery.drawTime).toLocaleString()}
+                            Draw: {formatToISTString(lottery.drawTime)}
                           </p>
                           <Link
                             href={`/admin/payouts?lotteryId=${lottery.id}`}

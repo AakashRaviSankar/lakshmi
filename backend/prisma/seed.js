@@ -63,12 +63,14 @@ async function main() {
   console.log("Seeding default system configuration...");
   await prisma.systemConfig.upsert({
     where: { id: "default" },
-    update: {},
+    update: {
+      appVersion: "1.0.1",
+    },
     create: {
       id: "default",
       supportMobile: "9962188600",
       supportEmail: "tgboyzz007@gmail.com",
-      appVersion: "1.0.0",
+      appVersion: "1.0.1",
       appDownloadUrl: "https://178-238-236-200.sslip.io/lakshmi.apk",
     },
   });

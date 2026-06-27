@@ -9,6 +9,7 @@ import {
   TextInput,
   ActivityIndicator,
   Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useState } from "react";
 import { useAppStore, API_BASE } from "./store";
@@ -174,7 +175,11 @@ export default function Support() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <View style={styles.topBlobLeft} />
       <View style={styles.topBlobRight} />
 
@@ -336,8 +341,9 @@ export default function Support() {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.version}>KL Dear Lottery v1.0.0</Text>
-    </ScrollView>
+      <Text style={styles.version}>KL Dear Lottery v1.0.1</Text>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

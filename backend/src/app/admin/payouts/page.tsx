@@ -1,6 +1,7 @@
 import { prisma } from "@/app/utils/db";
 import Link from "next/link";
 import { payUserWinningsForShow, payAllWinningsForShow } from "./actions";
+import { formatToISTString, formatToISTDateString } from "@/app/utils/date";
 
 export default async function PayoutsPage(props: {
   searchParams: Promise<{ lotteryId?: string }>;
@@ -186,7 +187,7 @@ export default async function PayoutsPage(props: {
                         <td className="px-6 py-4">
                           <p className="font-semibold text-white">{summary.name}</p>
                           <p className="text-xs text-slate-500 mt-0.5">
-                            Draw: {new Date(summary.drawTime).toLocaleDateString()}
+                            Draw: {formatToISTDateString(summary.drawTime)}
                           </p>
                         </td>
                         <td className="px-6 py-4">
@@ -249,7 +250,7 @@ export default async function PayoutsPage(props: {
                 <p className="text-[10px] text-indigo-400 font-extrabold tracking-wider uppercase">Active Draw Payout Panel</p>
                 <h2 className="text-xl font-bold text-white mt-1">{selectedLottery.name}</h2>
                 <p className="text-xs text-slate-550 mt-1">
-                  Draw date: {new Date(selectedLottery.drawTime).toLocaleString()} | Winning Outcome:{" "}
+                  Draw date: {formatToISTString(selectedLottery.drawTime)} | Winning Outcome:{" "}
                   <span className="text-indigo-400 font-bold font-mono bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded text-xs">
                     {selectedLottery.winningNumber}
                   </span>

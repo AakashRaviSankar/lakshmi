@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/utils/db";
 import { verifyUserSession } from "@/app/utils/auth";
+import { getISTDateStr } from "@/app/utils/date";
 
 interface CartItem {
   lotteryId: string;
@@ -74,9 +75,9 @@ export async function POST(req: NextRequest) {
         }
 
         // Verify holiday block
-        const drawDateStr = showTime.toISOString().split("T")[0];
+        const drawDateStr = getISTDateStr(showTime);
         const isOnHoliday = holidays.some((h) => {
-          const holidayDateStr = new Date(h.date).toISOString().split("T")[0];
+          const holidayDateStr = getISTDateStr(h.date);
           if (holidayDateStr === drawDateStr) {
             return h.category === null || h.category === lottery.category;
           }

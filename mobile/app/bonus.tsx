@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   trackerTitle: {
     fontSize: 15,
-    fontWeight: "850",
+    fontWeight: "800",
     color: "#111827",
   },
   weekStartText: {

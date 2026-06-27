@@ -81,7 +81,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   deviceId: null,
   supportMobile: "9962188600",
   supportEmail: "tgboyzz007@gmail.com",
-  appVersion: "1.0.0",
+  appVersion: "1.0.1",
   appDownloadUrl: "",
 
   initialize: async () => {
@@ -111,7 +111,7 @@ export const useAppStore = create<AppState>((set, get) => ({
         deviceId: storedDeviceId,
         supportMobile: configData?.supportMobile || "9962188600",
         supportEmail: configData?.supportEmail || "tgboyzz007@gmail.com",
-        appVersion: configData?.appVersion || "1.0.0",
+        appVersion: configData?.appVersion || "1.0.1",
         appDownloadUrl: configData?.appDownloadUrl || "",
       });
     } catch (e) {

@@ -1,25 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/utils/db";
 import { verifyUserSession } from "@/app/utils/auth";
+import { getCurrentISTDate, getISTDateStr, getISTStartOfDay } from "@/app/utils/date";
 
 const DAYS_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 // Helper to calculate weekly qualification status
 async function getSundayBonusEligibility(userId: string) {
-  const today = new Date();
-  const dayOfWeek = today.getDay(); // 0 is Sunday, 1 is Monday, ..., 6 is Saturday
-  const startOfWeek = new Date(today);
+  const todayIST = getCurrentISTDate();
+  const dayOfWeek = todayIST.getDay(); // 0 is Sunday, 1 is Monday, ..., 6 is Saturday
+  const startOfWeekIST = new Date(todayIST.getTime());
 
   // If today is Sunday, we check the Mon-Sat of the week that just ended
   if (dayOfWeek === 0) {
-    startOfWeek.setDate(today.getDate() - 6);
+    startOfWeekIST.setDate(todayIST.getDate() - 6);
   } else {
     // If today is Mon-Sat, we check the current week
-    startOfWeek.setDate(today.getDate() - (dayOfWeek - 1));
+    startOfWeekIST.setDate(todayIST.getDate() - (dayOfWeek - 1));
   }
 
-  // Set start of Monday to 00:00:00.000 local time
-  startOfWeek.setHours(0, 0, 0, 0);
+  // Set start of Monday to 00:00:00.000 in IST timezone
+  const startOfWeek = getISTStartOfDay(startOfWeekIST);
 
   const daysStatus = [];
   let totalDaysQualified = 0;
@@ -52,7 +53,7 @@ async function getSundayBonusEligibility(userId: string) {
 
     daysStatus.push({
       day: DAYS_NAMES[i],
-      date: dayStart.toISOString().split("T")[0],
+      date: getISTDateStr(dayStart),
       amountSpent,
       showsCount,
       qualified,
@@ -70,7 +71,7 @@ async function getSundayBonusEligibility(userId: string) {
   });
 
   return {
-    weekStart: startOfWeek.toISOString().split("T")[0],
+    weekStart: getISTDateStr(startOfWeek),
     daysStatus,
     eligible: totalDaysQualified === 6,
     claimed: !!claim,
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 1. Enforce that claims can only be processed on Sunday
-    const today = new Date();
+    const today = getCurrentISTDate();
     if (today.getDay() !== 0) {
       return NextResponse.json({ error: "Sunday bonus can only be claimed on Sundays." }, { status: 400 });
     }
@@ -125,7 +126,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "You have already claimed your Sunday bonus for this week." }, { status: 400 });
     }
 
-    const weekStartDate = new Date(status.weekStart);
+    const weekStartDate = getISTStartOfDay(new Date(status.weekStart));
 
     // Credit bonus inside a transaction
     await prisma.$transaction(async (tx) => {

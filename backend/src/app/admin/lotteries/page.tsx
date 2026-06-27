@@ -2,6 +2,7 @@ import { createLottery, closeLottery } from "./actions";
 import { prisma } from "@/app/utils/db";
 import { ConfirmButton } from "../ConfirmButton";
 import Link from "next/link";
+import { formatToISTString } from "@/app/utils/date";
 
 export default async function LotteriesPage(props: {
   searchParams: Promise<{
@@ -189,7 +190,7 @@ export default async function LotteriesPage(props: {
                         Category: <span className="text-indigo-400">{lottery.category}</span> | Ticket Cost: <span className="text-emerald-450 font-bold">₹{lottery.ticketPrice.toFixed(2)}</span>
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                        Draw scheduled for: {new Date(lottery.drawTime).toLocaleString()}
+                        Draw scheduled for: {formatToISTString(lottery.drawTime)}
                       </p>
                     </div>
                     <div>

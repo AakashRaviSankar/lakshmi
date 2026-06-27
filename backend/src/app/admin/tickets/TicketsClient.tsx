@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition, useMemo } from "react";
 import { calculateTicketWinnings } from "@/app/utils/lottery";
+import { formatToISTString } from "@/app/utils/date";
 
 interface User {
   id: string;
@@ -271,7 +272,7 @@ export default function TicketsClient({
             <h2 className="text-2xl font-black text-white mt-2">{lottery.name}</h2>
             <p className="text-xs text-slate-400 mt-1">
               Category: <span className="font-bold text-slate-350">{lottery.category}</span> | Draw Time:{" "}
-              <span className="font-bold text-slate-350">{new Date(lottery.drawTime).toLocaleString()}</span> | Ticket Price:{" "}
+              <span className="font-bold text-slate-350">{formatToISTString(lottery.drawTime)}</span> | Ticket Price:{" "}
               <span className="font-bold text-slate-350">₹{lottery.ticketPrice}</span>
             </p>
           </div>
@@ -452,7 +453,7 @@ export default function TicketsClient({
                             {ticket.number}
                           </span>
                           <p className="text-[10px] text-slate-550 mt-1.5">
-                            {new Date(ticket.createdAt).toLocaleString()}
+                            {formatToISTString(ticket.createdAt)}
                           </p>
                         </td>
 

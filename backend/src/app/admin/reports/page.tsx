@@ -1,5 +1,6 @@
 import { prisma } from "@/app/utils/db";
 import Link from "next/link";
+import { getISTDateStr, formatToISTDateString, formatToISTTimeString } from "@/app/utils/date";
 
 export default async function ReportsPage(props: {
   searchParams: Promise<{
@@ -132,7 +133,7 @@ export default async function ReportsPage(props: {
   };
 
   for (const ticket of tickets) {
-    const dateStr = new Date(ticket.createdAt).toISOString().split("T")[0];
+    const dateStr = getISTDateStr(ticket.createdAt);
     const day = getOrInitDay(dateStr);
     day.booked += ticket.amount;
     if (ticket.status === "WON") {
@@ -141,19 +142,19 @@ export default async function ReportsPage(props: {
   }
 
   for (const recharge of recharges) {
-    const dateStr = new Date(recharge.createdAt).toISOString().split("T")[0];
+    const dateStr = getISTDateStr(recharge.createdAt);
     const day = getOrInitDay(dateStr);
     day.recharges += recharge.amount;
   }
 
   for (const withdrawal of withdrawals) {
-    const dateStr = new Date(withdrawal.createdAt).toISOString().split("T")[0];
+    const dateStr = getISTDateStr(withdrawal.createdAt);
     const day = getOrInitDay(dateStr);
     day.withdrawals += withdrawal.amount;
   }
 
   for (const commission of commissions) {
-    const dateStr = new Date(commission.createdAt).toISOString().split("T")[0];
+    const dateStr = getISTDateStr(commission.createdAt);
     const day = getOrInitDay(dateStr);
     day.commissions += commission.amount;
   }
@@ -463,7 +464,7 @@ export default async function ReportsPage(props: {
                       <tr key={report.id} className="hover:bg-white/[0.01] transition-colors">
                         <td className="px-6 py-4">
                           <p className="font-semibold text-white">{report.name}</p>
-                          <p className="text-xs text-slate-500 mt-0.5">{new Date(report.drawTime).toLocaleDateString()}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">{formatToISTDateString(report.drawTime)}</p>
                         </td>
                         <td className="px-6 py-4">
                           <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-xs rounded-full font-bold border ${report.ticketsCount > 0 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-slate-500/10 text-slate-400 border-slate-500/20"}`}>
@@ -645,7 +646,7 @@ export default async function ReportsPage(props: {
                             </span>
                           </td>
                           <td className="px-6 py-4 text-slate-400">
-                            {new Date(row.drawTime).toLocaleDateString()} at {new Date(row.drawTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {formatToISTDateString(row.drawTime)} at {formatToISTTimeString(row.drawTime)}
                           </td>
                           <td className="px-6 py-4 text-slate-200 font-semibold">
                             {row.ticketsCount}

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, Alert, ActivityIndicator, ScrollView, Modal, Image } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, Alert, ActivityIndicator, ScrollView, Modal, Image, KeyboardAvoidingView, Platform } from "react-native";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { useAppStore, API_BASE } from "./store";
@@ -339,8 +339,12 @@ export default function Wallet() {
         transparent={true}
         onRequestClose={() => setDepositModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
             <View style={styles.modalHeaderIndicator} />
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Deposit Funds</Text>
@@ -445,6 +449,7 @@ export default function Wallet() {
             </ScrollView>
           </View>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Withdraw Modal Sheet */}
@@ -454,8 +459,12 @@ export default function Wallet() {
         transparent={true}
         onRequestClose={() => setWithdrawModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
             <View style={styles.modalHeaderIndicator} />
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Withdraw to Bank</Text>
@@ -571,6 +580,7 @@ export default function Wallet() {
             </ScrollView>
           </View>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

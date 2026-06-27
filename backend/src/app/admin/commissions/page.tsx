@@ -1,5 +1,6 @@
 import { prisma } from "@/app/utils/db";
 import Link from "next/link";
+import { formatToISTDateString } from "@/app/utils/date";
 
 export default async function CommissionsPage(props: {
   searchParams: Promise<{
@@ -165,7 +166,7 @@ export default async function CommissionsPage(props: {
                           <p className="text-xs text-slate-500 mt-0.5">{u.mobileNumber}</p>
                         </td>
                         <td className="px-4 py-4 text-xs text-slate-400 font-semibold">
-                          {new Date(u.createdAt).toLocaleDateString()}
+                          {formatToISTDateString(u.createdAt)}
                         </td>
                         <td className="px-4 py-4 text-right">
                           <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-xs rounded-full font-bold border ${u.isBlocked ? "bg-rose-500/10 text-rose-400 border-rose-500/20" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"}`}>
@@ -277,7 +278,7 @@ export default async function CommissionsPage(props: {
                           +₹{c.amount.toFixed(2)}
                         </td>
                         <td className="px-4 py-4 text-right text-xs text-slate-400 font-semibold">
-                          {new Date(c.createdAt).toLocaleDateString()}
+                          {formatToISTDateString(c.createdAt)}
                         </td>
                       </tr>
                     ))

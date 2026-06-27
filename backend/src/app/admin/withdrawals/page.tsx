@@ -1,6 +1,7 @@
 import { prisma } from "@/app/utils/db";
 import { approveWithdrawal, rejectWithdrawal, deleteWithdrawal } from "./actions";
 import { ConfirmButton } from "../ConfirmButton";
+import { formatToISTString } from "@/app/utils/date";
 
 export default async function WithdrawalsPage(props: {
   searchParams: Promise<{ page?: string; query?: string; status?: string; startDate?: string; endDate?: string }>;
@@ -214,7 +215,7 @@ export default async function WithdrawalsPage(props: {
                       </td>
                       <td className="px-6 py-4 font-extrabold text-indigo-400">₹{request.amount.toFixed(2)}</td>
                       <td className="px-6 py-4 text-xs text-slate-400">
-                        {new Date(request.createdAt).toLocaleString()}
+                        {formatToISTString(request.createdAt)}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-3">
@@ -294,7 +295,7 @@ export default async function WithdrawalsPage(props: {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-xs text-slate-400">
-                        {new Date(h.updatedAt).toLocaleString()}
+                        {formatToISTString(h.updatedAt)}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <form action={async () => {

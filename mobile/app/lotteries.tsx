@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Alert, ActivityIndicator, Image } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Alert, ActivityIndicator, Image, KeyboardAvoidingView, Platform } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { useAppStore, API_BASE, getTicketPayout } from "./store";
@@ -230,8 +230,12 @@ export default function Lotteries() {
         transparent={true}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
             <View style={styles.modalHeaderIndicator} />
             <Text style={styles.modalTitle}>Play Show</Text>
             <Text style={styles.modalSub}>{selectedShow?.name}</Text>
@@ -339,8 +343,9 @@ export default function Lotteries() {
               </View>
               <View style={{ height: 40 }} />
             </ScrollView>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

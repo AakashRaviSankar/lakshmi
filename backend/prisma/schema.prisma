@@ -229,7 +229,7 @@ model SystemConfig {
   id             String   @id @default("default")
   supportMobile  String   @default("9962188600")
   supportEmail   String   @default("tgboyzz007@gmail.com")
-  appVersion     String   @default("1.0.0")
+  appVersion     String   @default("1.0.1")
   appDownloadUrl String   @default("https://178-238-236-200.sslip.io/lakshmi.apk")
   updatedAt      DateTime @updatedAt
 }

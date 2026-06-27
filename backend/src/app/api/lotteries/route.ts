@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/utils/db";
 import { verifyUserSession } from "@/app/utils/auth";
+import { getISTDateStr } from "@/app/utils/date";
 
 // Helper to seed daily draws for a given date
 async function seedDrawsForDate(date: Date) {
-  const years = date.getFullYear();
-  const months = date.getMonth();
-  const days = date.getDate();
+  const istDateStr = getISTDateStr(date); // "YYYY-MM-DD"
+  const [year, month, day] = istDateStr.split("-");
 
   // Shows definitions
   const shows = [
@@ -17,7 +17,8 @@ async function seedDrawsForDate(date: Date) {
   ];
 
   for (const show of shows) {
-    const drawTime = new Date(years, months, days, show.hour, show.minute, 0, 0);
+    const drawTimeStr = `${year}-${month}-${day}T${String(show.hour).padStart(2, "0")}:${String(show.minute).padStart(2, "0")}:00+05:30`;
+    const drawTime = new Date(drawTimeStr);
 
     // Check if this show already exists for this exact draw time
     const existing = await prisma.lottery.findFirst({
@@ -49,9 +50,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: authError.message || "Unauthorized" }, { status: 401 });
     }
 
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
+    const todayISTStr = getISTDateStr(new Date());
+    const today = new Date(`${todayISTStr}T00:00:00.000+05:30`);
+    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
     await seedDrawsForDate(today);
     await seedDrawsForDate(tomorrow);
@@ -90,9 +91,9 @@ export async function GET(req: NextRequest) {
 
     // Filter lotteries that fall on holidays
     const activeLotteries = openLotteries.filter((draw) => {
-      const drawDateStr = new Date(draw.drawTime).toISOString().split("T")[0];
+      const drawDateStr = getISTDateStr(draw.drawTime);
       const isDrawOnHoliday = holidays.some((holiday) => {
-        const holidayDateStr = new Date(holiday.date).toISOString().split("T")[0];
+        const holidayDateStr = getISTDateStr(holiday.date);
         if (holidayDateStr === drawDateStr) {
           // If category is null, it's a holiday for the whole app; otherwise specific category
           return holiday.category === null || holiday.category === draw.category;

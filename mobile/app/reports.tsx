@@ -10,6 +10,7 @@ interface Ticket {
   amount: number;
   gameType: string;
   status: "PENDING" | "WON" | "LOST";
+  winnings: number;
   createdAt: string;
   lottery: {
     name: string;
@@ -151,7 +152,7 @@ export default function Reports() {
           windowSize={5}
           removeClippedSubviews={true}
           renderItem={({ item }) => {
-            const prize = getTicketPayout(item.gameType, item.amount);
+            const prize = item.winnings || getTicketPayout(item.gameType, item.amount);
             return (
               <View style={styles.ticketCard}>
                 <View style={styles.cardHeader}>

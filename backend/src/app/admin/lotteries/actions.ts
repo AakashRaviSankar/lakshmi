@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/app/utils/db";
 import { verifyAdminSessionAction } from "@/app/utils/adminAuth";
+import { parseAdminInputToIST } from "@/app/utils/date";
 
 export async function createLottery(formData: FormData): Promise<void> {
   try {
@@ -21,7 +22,7 @@ export async function createLottery(formData: FormData): Promise<void> {
       data: {
         name,
         category,
-        drawTime: new Date(drawTime),
+        drawTime: parseAdminInputToIST(drawTime),
         ticketPrice,
         status: "OPEN",
       },

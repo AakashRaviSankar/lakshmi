@@ -98,7 +98,8 @@ export default async function HolidaysPage() {
                     {holidays.map((h) => (
                       <tr key={h.id} className="hover:bg-white/[0.01] transition-colors">
                         <td className="px-6 py-4 font-semibold text-white">
-                          {new Date(h.date).toLocaleDateString(undefined, {
+                          {new Date(h.date).toLocaleDateString("en-IN", {
+                            timeZone: "Asia/Kolkata",
                             weekday: "short",
                             year: "numeric",
                             month: "short",
